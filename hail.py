@@ -4,7 +4,17 @@ import json
 from collections import Mapping, Sequence
 from urllib import urlencode
 
-__all__ = ['Storm']
+__all__ = ('Storm', 'StormError')
+
+
+class StormError(Exception):
+    def __init__(self, status, reason, message):
+        self.status = status
+        self.reason = reason
+        self.message = message
+
+    def __str__(self):
+        return repr(self.reason)
 
 
 class _StormClient(object):
@@ -18,10 +28,15 @@ class _StormClient(object):
         connection = httplib.HTTPConnection(self._host, self._port, strict=True)
         connection.request(method, self._BASE_URL + url)
         response = connection.getresponse()
+        message = response.read()
 
-        assert response.status == httplib.OK
+        if response.status == httplib.OK:
+            return json.loads(message)
 
-        return json.loads(response.read())
+        if response.status == httplib.INTERNAL_SERVER_ERROR:
+            message = json.loads(message)['errorMessage']
+
+        raise StormError(response.status, response.reason, message)
 
 
 class _ReadonlyDict(Mapping):
