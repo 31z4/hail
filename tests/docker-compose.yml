@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+    zookeeper:
+        image: 31z4/zookeeper:3.4.8
+
+    nimbus:
+        image: 31z4/storm:1.0.1
+        command: >
+            storm nimbus
+            -c storm.zookeeper.servers="[\"zookeeper\"]"
+            -c nimbus.host="nimbus"
+        depends_on:
+            - zookeeper
+
+    supervisor:
+        image: 31z4/storm:1.0.1
+        command: >
+            storm supervisor
+            -c storm.zookeeper.servers="[\"zookeeper\"]"
+            -c nimbus.seeds="[\"nimbus\"]"
+        depends_on:
+            - nimbus
+
+    ui:
+        image: 31z4/storm:1.0.1
+        command: >
+            storm ui
+            -c nimbus.host="nimbus"
+        depends_on:
+            - nimbus
+        ports:
+            - 8080:8080

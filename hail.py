@@ -120,7 +120,7 @@ class _Nimbuses(_StormResponseLoader, _ReadonlyList):
         return [
             _ReadonlyDict(item)
             for item in data['nimbuses']
-            ]
+        ]
 
 
 class _History(_StormResponseLoader, _ReadonlyList):
@@ -150,7 +150,7 @@ class _TopologyWorkers(_StormResponseLoader, _ReadonlyList):
         return [
             _ReadonlyDict(item)
             for item in data['hostPortList']
-            ]
+        ]
 
 
 class _TopologyStats(_StormResponseLoader, _ReadonlyList):
@@ -160,7 +160,7 @@ class _TopologyStats(_StormResponseLoader, _ReadonlyList):
         return [
             _ReadonlyDict(item)
             for item in data['topologyStats']
-            ]
+        ]
 
 
 class _TopologyConfiguration(_StormResponseLoader, _ReadonlyList):
@@ -203,6 +203,7 @@ class _Cluster(_ClusterSummary):
 class _Topology(_StormClient, _ReadonlyDict):
     def __init__(self, data, host, port):
         super(_Topology, self).__init__(host, port)
+
         self._data = data
 
     @property
@@ -229,6 +230,7 @@ class _Topology(_StormClient, _ReadonlyDict):
 class _Component(_StormClient, _ReadonlyDict):
     def __init__(self, data, host, port, topology_id, component_id):
         super(_Component, self).__init__(host, port)
+
         self._data = data
         self._topology_id = topology_id
         self._component_id = component_id
