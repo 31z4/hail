@@ -3,31 +3,41 @@ version: '2'
 services:
     zookeeper:
         image: 31z4/zookeeper:3.4.8
+        restart: always
 
-    nimbus:
-        image: 31z4/storm:1.0.1
+    storm-nimbus:
+        image: 31z4/storm:$STORM_VERSION
+        restart: always
         command: >
             storm nimbus
             -c storm.zookeeper.servers="[\"zookeeper\"]"
-            -c nimbus.host="nimbus"
+            -c nimbus.host="storm-nimbus"
         depends_on:
             - zookeeper
 
-    supervisor:
-        image: 31z4/storm:1.0.1
+    storm-supervisor:
+        image: 31z4/storm:$STORM_VERSION
+        restart: always
         command: >
             storm supervisor
             -c storm.zookeeper.servers="[\"zookeeper\"]"
-            -c nimbus.seeds="[\"nimbus\"]"
+            -c nimbus.seeds="[\"storm-nimbus\"]"
         depends_on:
-            - nimbus
+            - storm-nimbus
 
-    ui:
-        image: 31z4/storm:1.0.1
+    storm-ui:
+        image: 31z4/storm:$STORM_VERSION
+        restart: always
         command: >
             storm ui
-            -c nimbus.host="nimbus"
+            -c nimbus.host="storm-nimbus"
         depends_on:
-            - nimbus
-        ports:
-            - 8080:8080
+            - storm-supervisor
+            - storm-nimbus
+
+    test:
+        build: ..
+        environment:
+            STORM_UI_HOST: storm-ui
+        depends_on:
+            - storm-ui
