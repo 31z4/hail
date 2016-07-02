@@ -1,6 +1,6 @@
 import unittest
 
-from hail import Storm, _ReadonlyDict, _ReadonlyList
+from hail import Storm, StormError, _ReadonlyDict, _ReadonlyList
 from os import getenv
 from waiting import wait
 
@@ -20,9 +20,10 @@ class Test(unittest.TestCase):
             int(getenv('STORM_UI_PORT', '8080'))
         )
 
-    def test_cluster(self):
-        self.wait(lambda: self.storm.cluster is not None)
+        cls.wait(lambda: cls.storm.cluster is not None)
+        cls.storm_version = cls.storm.cluster['stormVersion']
 
+    def test_cluster(self):
         cluster = self.storm.cluster
         self.assertIsInstance(cluster, _ReadonlyDict)
         self.assertGreater(len(cluster), 0)
@@ -43,6 +44,10 @@ class Test(unittest.TestCase):
         self.assertGreater(len(supervisor), 0)
 
     def test_nimbuses(self):
+        if not self.storm_version.startswith('1'):
+            self.assertRaisesRegexp(StormError, 'Not Found', lambda: self.storm.nimbuses)
+            return
+
         self.wait(lambda: self.storm.nimbuses)
 
         nimbuses = self.storm.nimbuses
@@ -54,6 +59,10 @@ class Test(unittest.TestCase):
         self.assertGreater(len(nimbus), 0)
 
     def test_history(self):
+        if not self.storm_version.startswith('1'):
+            self.assertRaisesRegexp(StormError, 'Not Found', lambda: self.storm.history)
+            return
+
         self.wait(lambda: self.storm.history is not None)
 
         history = self.storm.history

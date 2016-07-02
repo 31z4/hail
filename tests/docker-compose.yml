@@ -31,12 +31,16 @@ services:
         command: >
             storm ui
             -c nimbus.host="storm-nimbus"
+        ports:
+            - 8080:8080
         depends_on:
             - storm-supervisor
             - storm-nimbus
 
     test:
-        build: ..
+        build:
+            context: ..
+            dockerfile: tests/Dockerfile
         environment:
             STORM_UI_HOST: storm-ui
         depends_on:

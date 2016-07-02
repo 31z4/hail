@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='hail',
-    version='0.3b1',
+    version='0.3b2',
     py_modules=["hail"],
 
 
