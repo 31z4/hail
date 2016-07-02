@@ -1,0 +1,17 @@
+sudo: required
+language: python
+services:
+  - docker
+
+before_script: docker-compose -f tests/docker-compose.yml up -d
+script: python setup.py test
+
+python:
+    - "2.6"
+    - "2.7"
+env:
+    - STORM_VERSION=0.9.6
+    - STORM_VERSION=0.10.0
+    - STORM_VERSION=0.10.1
+    - STORM_VERSION=1.0.0
+    - STORM_VERSION=1.0.1
