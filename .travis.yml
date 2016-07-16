@@ -3,18 +3,16 @@ sudo: required
 services:
     - docker
 
-python:
-    - "2.7"
 env:
     global:
         - DOCKER_VERSION=1.11.2-0~trusty
         - DOCKER_COMPOSE_VERSION=1.7.1
     matrix:
-        - STORM_VERSION=0.9.6
-        - STORM_VERSION=0.10.0
-        - STORM_VERSION=0.10.1
-        - STORM_VERSION=1.0.0
-        - STORM_VERSION=1.0.1
+        - PYTHON_VERSIONS=2.7 STORM_VERSIONS=0.9.6
+        - PYTHON_VERSIONS=2.7 STORM_VERSIONS=0.10.0
+        - PYTHON_VERSIONS=2.7 STORM_VERSIONS=0.10.1
+        - PYTHON_VERSIONS=2.7 STORM_VERSIONS=1.0.0
+        - PYTHON_VERSIONS=2.7 STORM_VERSIONS=1.0.1
 
 before_install:
     # upgrade docker-engine to specific version
@@ -26,5 +24,4 @@ before_install:
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin
 
-before_script: docker-compose -f tests/docker-compose.yml up -d
-script: python setup.py test
+script: tests/test.sh

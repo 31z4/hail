@@ -40,7 +40,7 @@ services:
     test:
         build:
             context: ..
-            dockerfile: tests/Dockerfile
+            dockerfile: tests/Dockerfile-$PYTHON_VERSION
         environment:
             STORM_UI_HOST: storm-ui
         depends_on:
