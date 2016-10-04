@@ -5,8 +5,8 @@ services:
 
 env:
     global:
-        - DOCKER_VERSION=1.11.2-0~trusty
-        - DOCKER_COMPOSE_VERSION=1.7.1
+        - DOCKER_VERSION=1.12.1-0~trusty
+        - DOCKER_COMPOSE_VERSION=1.8.1
     matrix:
         - PYTHON_VERSIONS=2.7 STORM_VERSIONS=0.9.7
         - PYTHON_VERSIONS=2.7 STORM_VERSIONS=0.10.2
